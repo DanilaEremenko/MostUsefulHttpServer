@@ -1,0 +1,10 @@
+task startService(type: Exec){
+		if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+				commandLine 'cmd', '/c', 'python', 'run_server.py'
+				println "Server runing via windows cmd"
+		} else {
+				commandLine 'sh', '-c', 'python run_server.py'
+				println "Server runing via shell"
+		}
+
+}
