@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import signal
 import sys
-from datetime import datetime
+import json
 
 
 class HttpProcessor(BaseHTTPRequestHandler):
@@ -10,21 +10,21 @@ class HttpProcessor(BaseHTTPRequestHandler):
             try:
                 year = int(self.path[7:])
             except:
-                self.wfile.write(b'BAD REQUEST')
+                self._send_all(404, "BAD YEAR NUMBER")
                 return
 
-            self.send_header('content-type', 'text/xml')
-            self.end_headers()
-            self.send_response(200)
-
             if year % 4 == 0 and year % 100 == 0 and year % 400 == 0:
-                self.wfile.write("12/09/%d" % year)
+                self._send_all(404, "12/09/%d" % year)
             else:
-                self.wfile.write("13/09/%d" % year)
+                self._send_all(404, "13/09/%d" % year)
         else:
-            self.send_header('content-type', 'text/xml')
-            self.end_headers()
-            self.send_response(404)
+            self._send_all(404, "BAD REQUEST")
+
+    def _send_all(self, response, dataMessage):
+        self.send_response(response)
+        self.send_header('content-type', 'text/json')
+        self.end_headers()
+        self.wfile.write(json.dumps({"errorCode": response, "dataMessage": dataMessage}).encode())
 
 
 def signal_handler(sig, frame):
