@@ -10,21 +10,21 @@ class HttpProcessor(BaseHTTPRequestHandler):
             try:
                 year = int(self.path[7:])
             except:
-                self._send_all(404, "BAD YEAR NUMBER")
+                self._send_all(1, "BAD YEAR NUMBER")
                 return
 
             if year % 4 == 0 and year % 100 == 0 and year % 400 == 0:
-                self._send_all(404, "12/09/%d" % year)
+                self._send_all(200, "12/09/%d" % year)
             else:
-                self._send_all(404, "13/09/%d" % year)
+                self._send_all(200, "13/09/%d" % year)
         else:
-            self._send_all(404, "BAD REQUEST")
+            self._send_all(2, "BAD REQUEST")
 
-    def _send_all(self, response, dataMessage):
-        self.send_response(response)
+    def _send_all(self, errorCode, dataMessage):
+        self.send_response(200)
         self.send_header('content-type', 'text/json')
         self.end_headers()
-        self.wfile.write(json.dumps({"errorCode": response, "dataMessage": dataMessage}).encode())
+        self.wfile.write(json.dumps({"errorCode": errorCode, "dataMessage": dataMessage}).encode())
 
 
 def signal_handler(sig, frame):
