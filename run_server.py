@@ -33,11 +33,14 @@ def signal_handler(sig, frame):
 
 
 def main():
+    print("Starting simple http server...")
+
     signal.signal(signal.SIGINT, signal_handler)
-    print("Setting SIGINT handler")
+    print("SIGINT handler created")
 
     serv = HTTPServer(('', 8080), HttpProcessor)
-    print("Running server")
+    print("Port setted\nRunning server...")
+
     serv.serve_forever()
 
 
