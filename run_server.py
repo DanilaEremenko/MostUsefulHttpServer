@@ -1,3 +1,4 @@
+import argparse
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import signal
 import sys
@@ -33,13 +34,20 @@ def signal_handler(sig, frame):
 
 
 def main():
+    # parsing arguments
+    parser = argparse.ArgumentParser(description="Simple http server with optional -p flag")
+    parser.add_argument("-p", "--port", type=int, action="store", help="port")
+    args = parser.parse_args()
+    port = args.port if args.port is not None else 8080
+
+    # running server
     print("Starting simple http server...")
 
     signal.signal(signal.SIGINT, signal_handler)
     print("SIGINT handler created")
 
-    serv = HTTPServer(('', 8080), HttpProcessor)
-    print("Port setted\nRunning server...")
+    serv = HTTPServer(('', port), HttpProcessor)
+    print("Requests expected on %d port\nRunning server..." % port)
 
     serv.serve_forever()
 
