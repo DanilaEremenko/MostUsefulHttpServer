@@ -14,7 +14,7 @@ class HttpProcessor(BaseHTTPRequestHandler):
                 self._send_all(1, "BAD YEAR NUMBER")
                 return
 
-            if year % 4 == 0 and year % 100 == 0 and year % 400 == 0:
+            if year % 4 == 0 and year % 100 != 0 or year % 400 == 0:
                 self._send_all(200, "12/09/%d" % year)
             else:
                 self._send_all(200, "13/09/%d" % year)
